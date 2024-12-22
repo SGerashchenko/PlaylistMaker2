@@ -22,20 +22,20 @@ class MainActivity : AppCompatActivity() {
         searchButton.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                val displayIntent = Intent(this@MainActivity, Search::class.java)
-                startActivity(displayIntent)
-
-                   }
-        })
+                startActivity(displayIntent)                   }        })
 
         val mediaButton: Button = findViewById(R.id.media_button)
        mediaButton.setOnClickListener {
          val displayIntent = Intent(this, Media::class.java)
            startActivity(displayIntent)
-        }
+       }
         val settingsButton: Button = findViewById(R.id.settings_button)
         settingsButton.setOnClickListener {
             val displayIntent = Intent(this, SettingsActivity::class.java)
-            startActivity(displayIntent)}}}
+            startActivity(displayIntent)}}
+
+
+}
 
 
 

@@ -4,5 +4,5 @@
     <dimen name="text_size_16">16sp</dimen>
     <dimen name="pad16">16dp</dimen>
     <dimen name="pad10">10dp</dimen>
-    <dimen name="pad21">21dp</dimen>
+    <dimen name="pad22">22dp</dimen>
     </resources>

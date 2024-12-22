@@ -1,10 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Search">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/background"
+        android:id="@+id/main"
+        tools:context=".Search">
+
+        <LinearLayout style="@style/MenuRow">
+
+            <ImageView
+                android:id="@+id/returnmenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_back_arrow"
+                android:padding="@dimen/pad16"
+                app:tint="@color/settings" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search"
+                android:textColor="@color/settings"
+                android:textSize="@dimen/text_size_22"
+                android:layout_marginStart="8dp"
+                android:fontFamily="@font/ys_display_medium"
+                android:textFontWeight="500"
+                />
+
+        </LinearLayout>
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="@dimen/pad16"
+        android:layout_marginRight="@dimen/pad16">
+
+
+        <EditText
+            android:id="@+id/search_input"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/search"
+            android:maxLines="1"
+            android:inputType="text"
+            android:background="@drawable/search_input_background"
+            android:drawableStart="@drawable/searchmini"
+            android:drawablePadding="8dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="40dp"
+            android:textColorHint="@color/searchtextcolor"
+            android:textCursorDrawable="@drawable/cursor"
+            android:textColor="@color/black"
+            android:textFontWeight="400"
+            android:textSize="@dimen/text_size_16"
+            android:fontFamily="@font/ys_display_regular"
+            />
+
+        <ImageView
+            android:id="@+id/clearButton"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="12dp"
+            android:src="@drawable/clear"
+            android:visibility="gone"
+            app:tint="@color/searchtextcolor" />
+    </FrameLayout>
+</LinearLayout>
+

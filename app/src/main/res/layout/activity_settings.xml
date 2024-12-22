@@ -1,137 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/background">
 
-        <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+    <LinearLayout style="@style/MenuRow">
 
         <ImageView
             android:id="@+id/back_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_back_arrow"
-            android:padding="@dimen/pad16" />
-
+            android:padding="@dimen/pad16"
+            app:tint="@color/settings" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/settings"
-            android:textColor="@color/black"
+            android:textColor="@color/settings"
             android:textSize="@dimen/text_size_22"
             android:layout_marginStart="8dp"
+            android:fontFamily="@font/ys_display_medium"
+            android:textFontWeight="500"
             />
-    </LinearLayout>
-
-       <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginTop="24dp"
-        >
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/dark_theme"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_16"
-            android:paddingTop="@dimen/pad21"
-            android:paddingBottom="@dimen/pad21"
-            android:paddingEnd="8dp"
-            android:paddingStart="@dimen/pad16"/>
-
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingEnd="6dp"
-            android:thumbTint="@color/switch_thumb_color"
-            android:trackTint="@color/switch_track_color"/>
-            tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        >
-
+        style="@style/MenuRow"
+        android:layout_marginTop="24dp">
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/share_app"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_16"
-            android:paddingTop="21dp"
-            android:paddingBottom="21dp"
-            android:paddingStart="16dp"/>
+            style="@style/MenuText"
+            android:text="@string/dark_theme"
 
-        <ImageView
+            />
+        <Switch
+            android:id="@+id/switchDayNight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingEnd="6dp"
+            android:thumbTint="@color/switch_thumb_color"
+            android:trackTint="@color/switch_track_color"
+            tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml"
+            />
+    </LinearLayout>
+
+    <LinearLayout style="@style/MenuRow">
+        <TextView
+            style="@style/MenuText"
+            android:text="@string/share_app" />
+        <ImageView
+            style="@style/MenuIcon"
             android:src="@drawable/share"
-            android:paddingEnd="12dp"/>
+            android:id="@+id/shareApp"/>
     </LinearLayout>
 
-       <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        >
-
+    <LinearLayout style="@style/MenuRow">
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/support"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_16"
-            android:paddingTop="21dp"
-            android:paddingBottom="21dp"
-            android:paddingStart="16dp"/>
-
+            style="@style/MenuText"
+            android:text="@string/support" />
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/support"
+            style="@style/MenuIcon"
             android:src="@drawable/support"
-            android:paddingEnd="12dp"/>
+             />
     </LinearLayout>
 
-     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        >
-
+    <LinearLayout style="@style/MenuRow">
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            style="@style/MenuText"
             android:text="@string/user_agreement"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_16"
-            android:paddingTop="21dp"
-            android:paddingBottom="21dp"
-            android:paddingStart="16dp"/>
-
+            />
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/useragreement"
-            android:paddingEnd="12dp"/>
+            android:id="@+id/openAgreement"
+            style="@style/MenuIcon"
+            android:src="@drawable/useragreement" />
     </LinearLayout>
 
 </LinearLayout>
