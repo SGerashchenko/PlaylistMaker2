@@ -8,7 +8,8 @@
         android:orientation="vertical"
         android:background="@color/background"
         android:id="@+id/main"
-        tools:context=".Search">
+        tools:context=".Search"
+        android:fitsSystemWindows="true">
 
         <LinearLayout style="@style/MenuRow">
 
