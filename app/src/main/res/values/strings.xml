@@ -22,4 +22,11 @@
 
     <string name="editTextHint">Поиск</string>
 
+    <!--10 спринт, добавление строковых ресурсов-->
+
+    <string name="TrackName">TrackName</string>
+    <string name="ArtistName">Artist</string>
+    <string name="TrackTime">00:00</string>
+
+
 </resources>
