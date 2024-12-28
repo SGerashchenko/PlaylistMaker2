@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <LinearLayout style="@style/MenuRow">
+
+        <ImageView
+            android:id="@+id/back_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/pad16"
+            android:src="@drawable/ic_back_arrow"
+            app:tint="@color/settings" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/ys_display_medium"
+            android:text="@string/settings"
+            android:textColor="@color/settings"
+            android:textFontWeight="500"
+            android:textSize="@dimen/text_size_22" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/MenuRow"
+        android:layout_marginTop="24dp">
+
+        <TextView
+            style="@style/MenuText"
+            android:text="@string/dark_theme"
+
+            />
+
+        <Switch
+            android:id="@+id/switchDayNight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingEnd="6dp"
+            android:thumbTint="@color/switch_thumb_color"
+            android:trackTint="@color/switch_track_color"
+            tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/MenuRow">
+
+        <TextView
+            style="@style/MenuText"
+            android:text="@string/share_app" />
+
+        <ImageView
+            android:id="@+id/shareApp"
+            style="@style/MenuIcon"
+            android:src="@drawable/share" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/MenuRow">
+
+        <TextView
+            style="@style/MenuText"
+            android:text="@string/support" />
+
+        <ImageView
+            android:id="@+id/support"
+            style="@style/MenuIcon"
+            android:src="@drawable/support" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/MenuRow">
+
+        <TextView
+            style="@style/MenuText"
+            android:text="@string/user_agreement" />
+
+        <ImageView
+            android:id="@+id/openAgreement"
+            style="@style/MenuIcon"
+            android:src="@drawable/useragreement" />
+    </LinearLayout>
+
+</LinearLayout>
