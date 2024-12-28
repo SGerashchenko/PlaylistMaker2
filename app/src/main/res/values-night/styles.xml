@@ -69,6 +69,5 @@
     <color name="settings">#FFFFFFFF</color>
     <color name="searchcolor">#FFFFFFFF</color>
     <color name="searchtextcolor">#FF000000</color>
-    <color name="trackcolor">#FFFFFFFF</color>
 
 </resources>

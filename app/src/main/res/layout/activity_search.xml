@@ -72,15 +72,5 @@
             android:visibility="gone"
             app:tint="@color/searchtextcolor" />
     </FrameLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycleViewTrack"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:itemCount="5"
-        tools:listitem="@layout/track" />
-
 </LinearLayout>
 

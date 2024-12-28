@@ -8,8 +8,7 @@
     android:orientation="vertical"
     android:paddingLeft="@dimen/pad16"
     android:paddingRight="@dimen/pad16"
-    android:paddingBottom="48dp"
-    android:paddingTop="8dp">
+    android:paddingBottom="48dp">
 
     <TextView
         android:layout_width="wrap_content"
