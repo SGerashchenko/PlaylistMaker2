@@ -21,13 +21,13 @@
             <item name="android:insetBottom">0dp</item>
             <item name="android:gravity">center</item>
             <item name="iconSize">24dp</item>
-            <item name="iconTint">@color/black</item>
+            <item name="iconTint">@color/textmainmenublack</item>
             <item name="iconPadding">@dimen/pad10</item>
             <item name="iconGravity">textStart</item>
             <item name="cornerRadius">@dimen/pad16</item>
             <item name="android:textAllCaps">false</item>
             <item name="android:backgroundTint">@color/white</item>
-            <item name="android:textColor">@color/black</item>
+            <item name="android:textColor">@color/textmainmenublack</item>
             <item name="android:textSize">@dimen/text_size_22</item>
             <item name="fontFamily">@font/ys_display_medium</item>
             <item name="android:textFontWeight">500</item>
