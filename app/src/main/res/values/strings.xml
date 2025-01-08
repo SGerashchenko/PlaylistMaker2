@@ -28,5 +28,10 @@
     <string name="ArtistName">Artist</string>
     <string name="TrackTime">00:00</string>
 
+    <!--11 спринт, добавление строковых ресурсов-->
+    <string name="update">Обновить</string>
+    <string name="errornetTextView">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="errorsearchTextView">Ничего не нашлось</string>
+
 
 </resources>

@@ -69,6 +69,9 @@
     <color name="settings">#FFFFFFFF</color>
     <color name="searchcolor">#FFFFFFFF</color>
     <color name="searchtextcolor">#1A1B22</color>
-    <color name="trackcolor">#FFFFFFFF</color>
+    <color name="trackcolor">#FFFFFF</color>
+    <color name="update">#FFFFFF</color>
+    <color name="UpdateSearchButtonColor">@color/update</color>
+    <color name="UpdateSearchButtonTextColor">@color/background</color>
 
 </resources>
