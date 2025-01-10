@@ -15,22 +15,36 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class SettingsActivity : AppCompatActivity() {
-    @SuppressLint("MissingInflatedId")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        // Назад в главное меню
         val backMenu: ImageView = findViewById(R.id.back_menu)
         backMenu.setOnClickListener {
             val displayIntent = Intent(this, MainActivity::class.java)
             startActivity(displayIntent)
         }
-              val switchDayNight: Switch = findViewById(R.id.switchDayNight)
+
+        val switchDayNight: Switch = findViewById(R.id.switchDayNight)
+
+        val sharedPrefs = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE)
+        val isDarkTheme = sharedPrefs.getBoolean(THEME_KEY, false) // false - по умолчанию светлая тема
+        switchDayNight.isChecked = isDarkTheme
+
+
         switchDayNight.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            } else { AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)}
+            if (isChecked) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+
+            sharedPrefs.edit()
+                .putBoolean(THEME_KEY, isChecked)
+                .apply()
         }
+
 
         val shareApp: ImageView = findViewById(R.id.shareApp)
         shareApp.setOnClickListener {
@@ -40,6 +54,8 @@ class SettingsActivity : AppCompatActivity() {
             }
             startActivity(Intent.createChooser(shareAppIntent, getString(R.string.choose_sharing_method)))
         }
+
+
         val sendSupport: ImageView = findViewById(R.id.support)
         sendSupport.setOnClickListener {
             val email = getString(R.string.myEmail)
@@ -55,6 +71,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(sendSupportIntent)
         }
 
+
         val openAgreement = findViewById<ImageView>(R.id.openAgreement)
         openAgreement.setOnClickListener {
             val openAgreementIntent = Intent().apply {
@@ -63,6 +80,11 @@ class SettingsActivity : AppCompatActivity() {
             }
             startActivity(openAgreementIntent)
         }
+    }
+
+    companion object {
+        const val APP_PREFERENCES = "app_preferences"
+        const val THEME_KEY = "theme_text"
     }
 }
 
