@@ -21,10 +21,11 @@ class TrackViewHolder(
 
     fun bind(model: Track) {
         itemView.setOnClickListener { onItemClick?.invoke(model) }
-
+        val artworkUrl = model.artworkUrl100.takeIf { !it.isNullOrEmpty() }
         Glide.with(itemView)
-            .load(model.artworkUrl100)
+            .load(artworkUrl)
             .placeholder(R.drawable.placeholder)
+            .error(R.drawable.placeholder)
             .centerCrop()
             .transform(
                 RoundedCorners(
