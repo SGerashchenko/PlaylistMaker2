@@ -1,6 +1,8 @@
 package com.practicum.playlistmaker
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -28,7 +30,9 @@ class Search : AppCompatActivity() {
     private lateinit var errorSearchImage: ImageView
     private lateinit var errorSearchText: TextView
     private lateinit var updateSearchButton: Button
-    private var searchRequest: String = SEARCH_REQUEST
+    private lateinit var searchHistoryTextView: TextView
+    private lateinit var searchHistoryButton: Button
+    private lateinit var sharedPrefs: SharedPreferences
 
     private val tracks = ArrayList<Track>()
     private val iTunesBaseUrl = "https://itunes.apple.com"
@@ -38,10 +42,20 @@ class Search : AppCompatActivity() {
         .build()
     private val iTunesService: iTunesApi = retrofit.create(iTunesApi::class.java)
 
+    private var searchRequest: String = SEARCH_REQUEST
+
+    companion object {
+        private const val APP_PREFERENCES = "app_preferences"
+        private const val SEARCH_REQUEST = ""
+    }
+
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_search)
+
+        sharedPrefs = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE)
 
         inputEditText = findViewById(R.id.search_input)
         clearSearchBar = findViewById(R.id.clearButton)
@@ -50,6 +64,8 @@ class Search : AppCompatActivity() {
         errorSearchImage = findViewById(R.id.errorSearchImage)
         errorSearchText = findViewById(R.id.errorSearchText)
         updateSearchButton = findViewById(R.id.updateSearchButton)
+        searchHistoryTextView = findViewById(R.id.youSearchHistory)
+        searchHistoryButton = findViewById(R.id.clearHistoryButton)
 
         recycleViewTrack.layoutManager = LinearLayoutManager(this)
         trackAdapter = TrackAdapter(tracks)
@@ -62,18 +78,21 @@ class Search : AppCompatActivity() {
         clearSearchBar.setOnClickListener {
             inputEditText.text.clear()
             hideKeyboard()
-            tracks.clear()
-            trackAdapter.notifyDataSetChanged()
             errorSearchLayout.visibility = View.GONE
+            showHistory()
         }
 
         updateSearchButton.setOnClickListener { search() }
 
-        inputEditText.setText(searchRequest)
-        inputEditText.requestFocus()
-        showKeyboard()
+        searchHistoryButton.setOnClickListener {
+            SearchHistory(sharedPrefs).clearHistory()
+            showHistory()
+        }
 
         setupTextWatcher()
+
+        inputEditText.setText(searchRequest)
+
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 search()
@@ -82,6 +101,12 @@ class Search : AppCompatActivity() {
                 false
             }
         }
+
+        trackAdapter.onItemClick = { track ->
+            SearchHistory(sharedPrefs).addNewTrack(track)
+        }
+
+        showHistory()
     }
 
     private fun setupTextWatcher() {
@@ -89,27 +114,35 @@ class Search : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                clearSearchBar.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
                 searchRequest = s.toString()
-                updateClearButtonVisibility(searchRequest)
+                if (s.isNullOrEmpty()) {
+                    showHistory()
+                } else {
+                    searchHistoryTextView.visibility = View.GONE
+                    searchHistoryButton.visibility = View.GONE
+                    tracks.clear()
+                    trackAdapter.notifyDataSetChanged()
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {}
         })
     }
 
-    private fun updateClearButtonVisibility(text: CharSequence?) {
-        clearSearchBar.visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
-    }
-
-    private fun hideKeyboard() {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(inputEditText.windowToken, 0)
-    }
-
-    private fun showKeyboard() {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputEditText.requestFocus()
-        imm.showSoftInput(inputEditText, InputMethodManager.SHOW_IMPLICIT)
+    @SuppressLint("NotifyDataSetChanged")
+    private fun showHistory() {
+        val history = SearchHistory(sharedPrefs).read()
+        if (history.isNotEmpty()) {
+            searchHistoryTextView.visibility = View.VISIBLE
+            searchHistoryButton.visibility = View.VISIBLE
+        } else {
+            searchHistoryTextView.visibility = View.GONE
+            searchHistoryButton.visibility = View.GONE
+        }
+        tracks.clear()
+        tracks.addAll(history)
+        trackAdapter.notifyDataSetChanged()
     }
 
     private fun search() {
@@ -159,18 +192,8 @@ class Search : AppCompatActivity() {
         errorSearchLayout.visibility = View.VISIBLE
     }
 
-    companion object {
-        private const val SEARCH_BAR = "SEARCH_BAR"
-        private const val SEARCH_REQUEST = ""
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(SEARCH_BAR, searchRequest)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        searchRequest = savedInstanceState.getString(SEARCH_BAR, SEARCH_REQUEST).orEmpty()
+    private fun hideKeyboard() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(inputEditText.windowToken, 0)
     }
 }

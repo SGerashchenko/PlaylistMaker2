@@ -7,5 +7,6 @@
     <dimen name="pad10">10dp</dimen>
     <dimen name="pad22">22dp</dimen>
     <dimen name="pad48">48dp</dimen>
+    <dimen name="track_image_corner_radius">8dp</dimen>
 
     </resources>
