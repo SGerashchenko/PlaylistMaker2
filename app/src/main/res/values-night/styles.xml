@@ -73,5 +73,6 @@
     <color name="update">#FFFFFF</color>
     <color name="UpdateSearchButtonColor">@color/update</color>
     <color name="UpdateSearchButtonTextColor">@color/background</color>
+    <color name="textcolorblack">#FFFFFF</color>
 
 </resources>

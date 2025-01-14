@@ -2,6 +2,7 @@ package com.practicum.playlistmaker
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
@@ -14,6 +15,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -104,9 +106,11 @@ class Search : AppCompatActivity() {
 
         trackAdapter.onItemClick = { track ->
             SearchHistory(sharedPrefs).addNewTrack(track)
+            val audioPlayerIntent = Intent(this, AudioPlayer::class.java).apply {
+                putExtra("Track", Gson().toJson(track))
+            }
+            startActivity(audioPlayerIntent)
         }
-
-        showHistory()
     }
 
     private fun setupTextWatcher() {
