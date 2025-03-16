@@ -78,6 +78,30 @@
         <item name="android:letterSpacing">0.01</item>
     </style>
 
+    <!-- Плеер текстовые шаблоны, слева.справа -->
+    <style name="AudioPlayerLeftText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:layout_marginStart">@dimen/pad16</item>
+    </style>
+
+    <style name="AudioPlayerRightText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/settings</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:layout_marginEnd">@dimen/pad16</item>
+    </style>
+
     <color name="mainbackground">#3772E7</color>
     <color name="background">#FFFFFFFF</color>
     <color name="settings">#FF000000</color>
@@ -85,7 +109,10 @@
     <color name="searchtextcolor">#AEAFB4</color>
     <color name="trackcolor">#AEAFB4</color>
     <color name="update">#1A1B22</color>
+    <color name="textcolorblack">#1A1B22</color>
+    <color name="textcolorgrey">#AEAFB4</color>
     <color name="UpdateSearchButtonColor">@color/update</color>
     <color name="UpdateSearchButtonTextColor">@color/background</color>
+
 
       </resources>

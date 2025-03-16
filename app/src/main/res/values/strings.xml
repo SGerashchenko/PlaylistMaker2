@@ -37,4 +37,14 @@
     <string name="youSearch">Вы искали</string>
     <string name="clearHistory">Очистить историю</string>
 
+    <!--13 спринт, добавление строковых ресурсов-->
+    <string name="country">Страна</string>
+    <string name="genre">Жанр</string>
+    <string name="releaseYear">Год</string>
+    <string name="albom">Альбом</string>
+    <string name="trackTime">Длительность</string>
+    <string name="listenTime">0:30</string>
+    <string name="trackName">Название трека</string>
+    <string name="artistName">Название группы</string>
+
 </resources>
