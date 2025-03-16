@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -35,6 +37,7 @@ class Search : AppCompatActivity() {
     private lateinit var searchHistoryTextView: TextView
     private lateinit var searchHistoryButton: Button
     private lateinit var sharedPrefs: SharedPreferences
+    private lateinit var progressBar: ProgressBar
 
     private val tracks = ArrayList<Track>()
     private val iTunesBaseUrl = "https://itunes.apple.com"
@@ -45,10 +48,15 @@ class Search : AppCompatActivity() {
     private val iTunesService: iTunesApi = retrofit.create(iTunesApi::class.java)
 
     private var searchRequest: String = SEARCH_REQUEST
+    private var isClickAllowed = true
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { search() }
 
     companion object {
         private const val APP_PREFERENCES = "app_preferences"
         private const val SEARCH_REQUEST = ""
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
     @SuppressLint("MissingInflatedId")
@@ -68,6 +76,7 @@ class Search : AppCompatActivity() {
         updateSearchButton = findViewById(R.id.updateSearchButton)
         searchHistoryTextView = findViewById(R.id.youSearchHistory)
         searchHistoryButton = findViewById(R.id.clearHistoryButton)
+        progressBar = findViewById(R.id.progressBar)
 
         recycleViewTrack.layoutManager = LinearLayoutManager(this)
         trackAdapter = TrackAdapter(tracks)
@@ -105,11 +114,13 @@ class Search : AppCompatActivity() {
         }
 
         trackAdapter.onItemClick = { track ->
-            SearchHistory(sharedPrefs).addNewTrack(track)
-            val audioPlayerIntent = Intent(this, AudioPlayer::class.java).apply {
-                putExtra("Track", Gson().toJson(track))
+            if (clickDebounce()) {
+                SearchHistory(sharedPrefs).addNewTrack(track)
+                val audioPlayerIntent = Intent(this, AudioPlayer::class.java).apply {
+                    putExtra("Track", Gson().toJson(track))
+                }
+                startActivity(audioPlayerIntent)
             }
-            startActivity(audioPlayerIntent)
         }
     }
 
@@ -120,6 +131,12 @@ class Search : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 clearSearchBar.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
                 searchRequest = s.toString()
+                handler.removeCallbacks(searchRunnable)
+
+                // Проверяем, что строка не пустая и не состоит только из пробелов
+                if (!s.isNullOrEmpty() && s.trim().isNotEmpty()) {
+                    handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+                }
                 if (s.isNullOrEmpty()) {
                     showHistory()
                 } else {
@@ -150,50 +167,57 @@ class Search : AppCompatActivity() {
     }
 
     private fun search() {
+        // Проверяем, что строка не пустая и не состоит только из пробелов
+        if (inputEditText.text.trim().isEmpty()) return
+
+        // Прячем заглушку перед новым поиском
+        errorSearchLayout.visibility = View.GONE
+
+        progressBar.visibility = View.VISIBLE
         iTunesService.search(inputEditText.text.toString())
             .enqueue(object : Callback<TracksResponse> {
                 override fun onResponse(call: Call<TracksResponse>, response: Response<TracksResponse>) {
-                    when (response.code()) {
-                        200 -> {
-                            response.body()?.results?.let {
-                                if (it.isNotEmpty()) {
-                                    errorSearchLayout.visibility = View.GONE
-                                    tracks.clear()
-                                    tracks.addAll(it)
-                                    trackAdapter.notifyDataSetChanged()
-                                } else {
-                                    showEmptyResultsLayout()
-                                }
+                    progressBar.visibility = View.GONE
+                    tracks.clear()
+                    if (response.isSuccessful) {
+                        response.body()?.results?.let {
+                            if (it.isNotEmpty()) {
+                                tracks.addAll(it)
+                            } else {
+                                showEmptyResultsLayout()
                             }
                         }
-                        else -> {
-                            showErrorInternetLayout()
-                        }
+                    } else {
+                        showError()
                     }
+                    trackAdapter.notifyDataSetChanged()
                 }
 
                 override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
-                    showErrorInternetLayout()
+                    progressBar.visibility = View.GONE
+                    showError()
                 }
             })
     }
 
     private fun showEmptyResultsLayout() {
-        tracks.clear()
-        trackAdapter.notifyDataSetChanged()
         errorSearchText.setText(R.string.errorsearchTextView)
         errorSearchImage.setImageResource(R.drawable.error__searchd)
         updateSearchButton.visibility = View.GONE
         errorSearchLayout.visibility = View.VISIBLE
     }
 
-    private fun showErrorInternetLayout() {
-        tracks.clear()
-        trackAdapter.notifyDataSetChanged()
-        errorSearchText.setText(R.string.errornetTextView)
-        errorSearchImage.setImageResource(R.drawable.error_netd)
-        updateSearchButton.visibility = View.VISIBLE
+    private fun showError() {
         errorSearchLayout.visibility = View.VISIBLE
+    }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
     }
 
     private fun hideKeyboard() {
@@ -201,3 +225,4 @@ class Search : AppCompatActivity() {
         imm.hideSoftInputFromWindow(inputEditText.windowToken, 0)
     }
 }
+

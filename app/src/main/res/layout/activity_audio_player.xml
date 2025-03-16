@@ -139,6 +139,8 @@
         android:layout_marginBottom="8dp"
         android:background="@null"
         android:src="@drawable/play"
+        android:enabled="false"
+        android:scaleType="center"
         app:layout_constraintBottom_toTopOf="@id/listenTime"
         app:layout_constraintEnd_toEndOf="@id/rightBorder"
         app:layout_constraintStart_toStartOf="@id/leftBorder" />

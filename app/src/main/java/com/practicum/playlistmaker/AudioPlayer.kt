@@ -1,10 +1,15 @@
 package com.practicum.playlistmaker
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.TypedValue
 import android.view.View
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -18,20 +23,25 @@ import java.util.Locale
 
 class AudioPlayer : AppCompatActivity() {
 
+    private var mediaPlayer: MediaPlayer? = null
+    private var playerState = STATE_DEFAULT
+    private var mainThreadHandler: Handler? = null
+
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audio_player)
 
         window.statusBarColor = ContextCompat.getColor(this, R.color.background)
 
-                val isDarkTheme = resources.configuration.uiMode and
+        val isDarkTheme = resources.configuration.uiMode and
                 Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.decorView.systemUiVisibility = if (isDarkTheme) {
-                             0
+                0
             } else {
-             View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             }
         }
 
@@ -44,8 +54,10 @@ class AudioPlayer : AppCompatActivity() {
         val releaseDate: TextView = findViewById(R.id.releaseDate)
         val primaryGenreName: TextView = findViewById(R.id.GenreName)
         val country: TextView = findViewById(R.id.country)
+        val startButton: ImageButton = findViewById(R.id.startButton)
+        val listenedTime: TextView = findViewById(R.id.listenTime)
 
-                returnButton.setOnClickListener {
+        returnButton.setOnClickListener {
             finish()
         }
 
@@ -58,7 +70,7 @@ class AudioPlayer : AppCompatActivity() {
 
         val track = Gson().fromJson(trackJson, Track::class.java)
 
-                Glide.with(applicationContext)
+        Glide.with(applicationContext)
             .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
             .placeholder(R.drawable.placeholder)
             .centerCrop()
@@ -86,5 +98,100 @@ class AudioPlayer : AppCompatActivity() {
         releaseDate.text = track.releaseDate.replaceAfter('-', "").replace("-", "")
         primaryGenreName.text = track.primaryGenreName
         country.text = track.country
+
+        // Инициализация MediaPlayer
+        mediaPlayer = MediaPlayer()
+        mainThreadHandler = Handler(Looper.getMainLooper())
+
+        preparePlayer(track.previewUrl)
+
+        startButton.setOnClickListener {
+            playbackControl()
+
+            mainThreadHandler?.postDelayed(
+                object : Runnable {
+                    override fun run() {
+                        when (playerState) {
+                            STATE_PLAYING -> {
+                                listenedTime.text =
+                                    SimpleDateFormat(
+                                        "mm:ss",
+                                        Locale.getDefault()
+                                    ).format(mediaPlayer?.currentPosition ?: 0)
+                                mainThreadHandler?.postDelayed(
+                                    this,
+                                    REFRESH_LISTENED_TIME_DELAY_MILLIS
+                                )
+                            }
+
+                            STATE_DEFAULT, STATE_PREPARED -> {
+                                listenedTime.setText(R.string.listenTime)
+                                mainThreadHandler?.removeCallbacksAndMessages(null)
+                            }
+
+                            STATE_PAUSED -> mainThreadHandler?.removeCallbacksAndMessages(null)
+                        }
+                    }
+                },
+                REFRESH_LISTENED_TIME_DELAY_MILLIS
+            )
+        }
+    }
+
+    private fun preparePlayer(url: String) {
+        mediaPlayer?.setDataSource(url)
+        mediaPlayer?.prepareAsync()
+        mediaPlayer?.setOnPreparedListener {
+            findViewById<ImageButton>(R.id.startButton).isEnabled = true
+            playerState = STATE_PREPARED
+        }
+        mediaPlayer?.setOnCompletionListener {
+            findViewById<ImageButton>(R.id.startButton).setImageResource(R.drawable.play)
+            playerState = STATE_PREPARED
+        }
+    }
+
+    private fun startPlayer() {
+        mediaPlayer?.start()
+        findViewById<ImageButton>(R.id.startButton).setImageResource(R.drawable.audioplayerpausebutton)
+        playerState = STATE_PLAYING
+    }
+
+    private fun pausePlayer() {
+        mediaPlayer?.pause()
+        findViewById<ImageButton>(R.id.startButton).setImageResource(R.drawable.play)
+        playerState = STATE_PAUSED
+    }
+
+    private fun playbackControl() {
+        when (playerState) {
+            STATE_PLAYING -> {
+                pausePlayer()
+            }
+
+            STATE_PREPARED, STATE_PAUSED -> {
+                startPlayer()
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer?.release()
+        mediaPlayer = null
+        mainThreadHandler?.removeCallbacksAndMessages(null)
+    }
+
+    companion object {
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+        private const val REFRESH_LISTENED_TIME_DELAY_MILLIS = 500L
     }
 }
