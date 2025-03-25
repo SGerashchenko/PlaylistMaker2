@@ -6,7 +6,7 @@
 
 
     <application
-        android:name="com.practicum.playlistmaker.App"
+        android:name="com.practicum.playlistmaker.ui.App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -17,19 +17,19 @@
         android:theme="@style/Base.Theme.PlaylistMaker"
         tools:targetApi="31">
         <activity
-            android:name=".AudioPlayer"
+            android:name=".ui.player.AudioPlayerActivity"
             android:exported="false" />
         <activity
-            android:name=".Search"
+            android:name=".ui.search.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".Media"
+            android:name=".ui.media.MediaActivity"
             android:exported="false" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".ui.settings.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

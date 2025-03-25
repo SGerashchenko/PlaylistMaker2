@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui.search
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -18,13 +18,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.SearchHistory
+import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.data.dto.TracksResponse
+import com.practicum.playlistmaker.data.network.iTunesApi
+import com.practicum.playlistmaker.ui.player.AudioPlayerActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class Search : AppCompatActivity() {
+class SearchActivity : AppCompatActivity() {
 
     private lateinit var inputEditText: EditText
     private lateinit var clearSearchBar: ImageView
@@ -116,7 +122,7 @@ class Search : AppCompatActivity() {
         trackAdapter.onItemClick = { track ->
             if (clickDebounce()) {
                 SearchHistory(sharedPrefs).addNewTrack(track)
-                val audioPlayerIntent = Intent(this, AudioPlayer::class.java).apply {
+                val audioPlayerIntent = Intent(this, AudioPlayerActivity::class.java).apply {
                     putExtra("Track", Gson().toJson(track))
                 }
                 startActivity(audioPlayerIntent)

@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui.player
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
@@ -18,10 +18,12 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.Gson
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class AudioPlayer : AppCompatActivity() {
+class AudioPlayerActivity : AppCompatActivity() {
 
     private var mediaPlayer: MediaPlayer? = null
     private var playerState = STATE_DEFAULT
