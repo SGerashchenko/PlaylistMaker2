@@ -20,8 +20,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.SearchHistory
+import com.practicum.playlistmaker.data.mapper.TrackMapper
 import com.practicum.playlistmaker.domain.models.Track
-import com.practicum.playlistmaker.data.dto.TracksResponse
 import com.practicum.playlistmaker.data.network.iTunesApi
 import com.practicum.playlistmaker.ui.player.AudioPlayerActivity
 import retrofit2.Call
@@ -178,17 +178,22 @@ class SearchActivity : AppCompatActivity() {
 
         // Прячем заглушку перед новым поиском
         errorSearchLayout.visibility = View.GONE
-
         progressBar.visibility = View.VISIBLE
+
         iTunesService.search(inputEditText.text.toString())
-            .enqueue(object : Callback<TracksResponse> {
-                override fun onResponse(call: Call<TracksResponse>, response: Response<TracksResponse>) {
+            .enqueue(object : Callback<com.practicum.playlistmaker.data.dto.TracksSearchResponse> {
+                override fun onResponse(
+                    call: Call<com.practicum.playlistmaker.data.dto.TracksSearchResponse>,
+                    response: Response<com.practicum.playlistmaker.data.dto.TracksSearchResponse>
+                ) {
                     progressBar.visibility = View.GONE
                     tracks.clear()
+
                     if (response.isSuccessful) {
-                        response.body()?.results?.let {
-                            if (it.isNotEmpty()) {
-                                tracks.addAll(it)
+                        response.body()?.results?.let { trackDtos ->
+                            if (trackDtos.isNotEmpty()) {
+                                // Используем маппер для преобразования списка
+                                tracks.addAll(TrackMapper.mapToDomainList(trackDtos))
                             } else {
                                 showEmptyResultsLayout()
                             }
@@ -196,10 +201,14 @@ class SearchActivity : AppCompatActivity() {
                     } else {
                         showError()
                     }
+
                     trackAdapter.notifyDataSetChanged()
                 }
 
-                override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+                override fun onFailure(
+                    call: Call<com.practicum.playlistmaker.data.dto.TracksSearchResponse>,
+                    t: Throwable
+                ) {
                     progressBar.visibility = View.GONE
                     showError()
                 }
